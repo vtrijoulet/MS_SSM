@@ -96,7 +96,10 @@ Type objective_function<Type>::operator() ()
   DATA_VECTOR(length_t);
   DATA_INTEGER(xmax);
   DATA_INTEGER(process_F);
-
+  DATA_IVECTOR(min_Fbar_idx); // minimum age use for calculation mean mortality rates
+  DATA_IVECTOR(max_Fbar_idx); // maximum age use for calculation mean mortality rates
+  DATA_VECTOR(Fbar_range); // length age range use for calculation mean mortality rates
+  
   
   
   // Parameters to estimate
@@ -247,8 +250,25 @@ Type objective_function<Type>::operator() ()
   matrix<Type> pred_log_E((Y-1),sp); // year component of F when process_F=1
   vector<Type> sd_increment_process_F(sp); // sd for increment noice for F process
   sd_increment_process_F=exp(log_sd_process_F)*sqrt(1-square(phi_process_F)); 
-
   
+  // Objects used to ADREPORT to avoid adreporting large matrices
+  matrix<Type> sumFAA(max_A,sp);
+  matrix<Type> sumFy(Y,sp);
+  matrix<Type> sumMAA(max_A,sp);
+  matrix<Type> sumMy(Y,sp);
+  matrix<Type> sumPAA(max_A,sp);
+  matrix<Type> sumPy(Y,sp);
+  matrix<Type> sumZAA(max_A,sp);
+  matrix<Type> sumZy(Y,sp);
+  matrix<Type> mean_FAA(max_A,sp);
+  matrix<Type> mean_Fy(Y,sp);
+  matrix<Type> mean_MAA(max_A,sp);
+  matrix<Type> mean_My(Y,sp);
+  matrix<Type> mean_PAA(max_A,sp);
+  matrix<Type> mean_Py(Y,sp);
+  matrix<Type> mean_ZAA(max_A,sp);
+  matrix<Type> mean_Zy(Y,sp);
+  matrix<Type> recruits(Y,sp);
   
 
   // Model
@@ -1383,6 +1403,13 @@ Type objective_function<Type>::operator() ()
   REPORT(PAA);
   REPORT(NLL);
   REPORT(nll_process_F);
+  REPORT(mean_My);
+  REPORT(mean_MAA);
+  REPORT(mean_Py);
+  REPORT(mean_PAA);
+  REPORT(mean_Zy);
+  REPORT(mean_ZAA);
+  REPORT(recruits);
   if (predation_on==1){
   // For trophic interactions
     // REPORT(Cfish);
@@ -1433,15 +1460,75 @@ Type objective_function<Type>::operator() ()
 
 
   //For sdreport 
+  sumFAA.setZero();
+  sumFy.setZero();
+  sumMAA.setZero();
+  sumMy.setZero();
+  sumPAA.setZero();
+  sumPy.setZero();
+  sumZAA.setZero();
+  sumZy.setZero();
+  mean_FAA.setZero();
+  mean_Fy.setZero();
+  mean_MAA.setZero();
+  mean_My.setZero();
+  mean_PAA.setZero();
+  mean_Py.setZero();
+  mean_ZAA.setZero();
+  mean_Zy.setZero();
+  // To avoid adreporting large matrices
+  for(int i = 0; i < sp; i++){
+    for(int t = 0; t < Y; t++){
+      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+        sumFy(t,i) += F(t,a,i);
+        sumMy(t,i) += MAA(t,a,i);
+        sumPy(t,i) += PAA(t,a,i);
+        sumZy(t,i) += Z(t,a,i);
+      }
+    }
+    for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+      for(int t = 0; t < Y; t++){
+        sumFAA(a,i) += F(t,a,i);
+        sumMAA(a,i) += MAA(t,a,i);
+        sumPAA(a,i) += PAA(t,a,i);
+        sumZAA(a,i) += Z(t,a,i);
+      }
+    }
+    for(int t = 0; t < Y; t++){
+      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+        mean_FAA(a,i) = sumFAA(a,i)/Y;
+        mean_Fy(t,i) = sumFy(t,i)/Fbar_range(i);
+        mean_MAA(a,i) = sumMAA(a,i)/Y;
+        mean_My(t,i) = sumMy(t,i)/Fbar_range(i);
+        mean_PAA(a,i) = sumPAA(a,i)/Y;
+        mean_Py(t,i) = sumPy(t,i)/Fbar_range(i);
+        mean_ZAA(a,i) = sumZAA(a,i)/Y;
+        mean_Zy(t,i) = sumZy(t,i)/Fbar_range(i);
+      }
+    }
+    for(int t = 0; t < Y; t++){
+      recruits(t,i) = NAA(t,0,i);
+    }
+  }
+  
+  ADREPORT(mean_My);
+  ADREPORT(mean_MAA);
+  ADREPORT(mean_Zy);
+  ADREPORT(mean_ZAA);
+  ADREPORT(recruits);
+  
+
   ADREPORT(SSB);
-  ADREPORT(NAA);
+  //ADREPORT(NAA);
   ADREPORT(aggr_Cw);
   ADREPORT(aggr_I);
-  ADREPORT(MAA);
-  ADREPORT(F);
-  ADREPORT(Z);
+  //ADREPORT(MAA);
+  //ADREPORT(F);
+  //ADREPORT(Z);
   if (predation_on==1){
-    ADREPORT(PAA);
+    ADREPORT(mean_Py);
+    ADREPORT(mean_PAA);
+  //   ADREPORT(PAA);
   //   ADREPORT(biomass_other);
   //   ADREPORT(size_pref);
   //   ADREPORT(cons_rate);
