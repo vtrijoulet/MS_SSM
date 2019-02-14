@@ -1330,6 +1330,57 @@ Type objective_function<Type>::operator() ()
   }
 
   
+  // Things to calculate for ADREPORT
+  sumFAA.setZero();
+  sumFy.setZero();
+  sumMAA.setZero();
+  sumMy.setZero();
+  sumPAA.setZero();
+  sumPy.setZero();
+  sumZAA.setZero();
+  sumZy.setZero();
+  mean_FAA.setZero();
+  mean_Fy.setZero();
+  mean_MAA.setZero();
+  mean_My.setZero();
+  mean_PAA.setZero();
+  mean_Py.setZero();
+  mean_ZAA.setZero();
+  mean_Zy.setZero();
+  // To avoid adreporting large matrices
+  for(int i = 0; i < sp; i++){
+    for(int t = 0; t < Y; t++){
+      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+        sumFy(t,i) += F(t,a,i);
+        sumMy(t,i) += MAA(t,a,i);
+        sumPy(t,i) += PAA(t,a,i);
+        sumZy(t,i) += Z(t,a,i);
+      }
+    }
+    for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+      for(int t = 0; t < Y; t++){
+        sumFAA(a,i) += F(t,a,i);
+        sumMAA(a,i) += MAA(t,a,i);
+        sumPAA(a,i) += PAA(t,a,i);
+        sumZAA(a,i) += Z(t,a,i);
+      }
+    }
+    for(int t = 0; t < Y; t++){
+      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
+        mean_FAA(a,i) = sumFAA(a,i)/Y;
+        mean_Fy(t,i) = sumFy(t,i)/Fbar_range(i);
+        mean_MAA(a,i) = sumMAA(a,i)/Y;
+        mean_My(t,i) = sumMy(t,i)/Fbar_range(i);
+        mean_PAA(a,i) = sumPAA(a,i)/Y;
+        mean_Py(t,i) = sumPy(t,i)/Fbar_range(i);
+        mean_ZAA(a,i) = sumZAA(a,i)/Y;
+        mean_Zy(t,i) = sumZy(t,i)/Fbar_range(i);
+      }
+    }
+    for(int t = 0; t < Y; t++){
+      recruits(t,i) = NAA(t,0,i);
+    }
+  }
 
   
   
@@ -1403,15 +1454,17 @@ Type objective_function<Type>::operator() ()
   REPORT(PAA);
   REPORT(NLL);
   REPORT(nll_process_F);
+  REPORT(mean_Fy);
+  REPORT(mean_FAA);
   REPORT(mean_My);
   REPORT(mean_MAA);
-  REPORT(mean_Py);
-  REPORT(mean_PAA);
   REPORT(mean_Zy);
   REPORT(mean_ZAA);
   REPORT(recruits);
   if (predation_on==1){
   // For trophic interactions
+    REPORT(mean_Py);
+    REPORT(mean_PAA);
     // REPORT(Cfish);
     // REPORT(Cfishw);
     // REPORT(shape_gamma);
@@ -1460,64 +1513,13 @@ Type objective_function<Type>::operator() ()
 
 
   //For sdreport 
-  sumFAA.setZero();
-  sumFy.setZero();
-  sumMAA.setZero();
-  sumMy.setZero();
-  sumPAA.setZero();
-  sumPy.setZero();
-  sumZAA.setZero();
-  sumZy.setZero();
-  mean_FAA.setZero();
-  mean_Fy.setZero();
-  mean_MAA.setZero();
-  mean_My.setZero();
-  mean_PAA.setZero();
-  mean_Py.setZero();
-  mean_ZAA.setZero();
-  mean_Zy.setZero();
-  // To avoid adreporting large matrices
-  for(int i = 0; i < sp; i++){
-    for(int t = 0; t < Y; t++){
-      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
-        sumFy(t,i) += F(t,a,i);
-        sumMy(t,i) += MAA(t,a,i);
-        sumPy(t,i) += PAA(t,a,i);
-        sumZy(t,i) += Z(t,a,i);
-      }
-    }
-    for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
-      for(int t = 0; t < Y; t++){
-        sumFAA(a,i) += F(t,a,i);
-        sumMAA(a,i) += MAA(t,a,i);
-        sumPAA(a,i) += PAA(t,a,i);
-        sumZAA(a,i) += Z(t,a,i);
-      }
-    }
-    for(int t = 0; t < Y; t++){
-      for(int a = min_Fbar_idx(i)-1; a < max_Fbar_idx(i); a++){
-        mean_FAA(a,i) = sumFAA(a,i)/Y;
-        mean_Fy(t,i) = sumFy(t,i)/Fbar_range(i);
-        mean_MAA(a,i) = sumMAA(a,i)/Y;
-        mean_My(t,i) = sumMy(t,i)/Fbar_range(i);
-        mean_PAA(a,i) = sumPAA(a,i)/Y;
-        mean_Py(t,i) = sumPy(t,i)/Fbar_range(i);
-        mean_ZAA(a,i) = sumZAA(a,i)/Y;
-        mean_Zy(t,i) = sumZy(t,i)/Fbar_range(i);
-      }
-    }
-    for(int t = 0; t < Y; t++){
-      recruits(t,i) = NAA(t,0,i);
-    }
-  }
-  
+  ADREPORT(mean_Fy);
+  ADREPORT(mean_FAA);
   ADREPORT(mean_My);
   ADREPORT(mean_MAA);
   ADREPORT(mean_Zy);
   ADREPORT(mean_ZAA);
   ADREPORT(recruits);
-  
-
   ADREPORT(SSB);
   //ADREPORT(NAA);
   ADREPORT(aggr_Cw);
