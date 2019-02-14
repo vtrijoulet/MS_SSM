@@ -15,11 +15,15 @@
 1973 1973 1973
 # Last year
 2014
-# Number of Ages prey (1st=cod, 2nd=silver hake, 3rd=herr)
+# Number of Ages prey = age plus group (1st=cod, 2nd=silver hake, 3rd=herr)
 10 6 10
 # Min age catch (sp)
 1 1 1
 # Max age catch (sp)
+10 6 10
+# Min age Fbar (sp)
+1 1 1
+# Max age Fbar (sp)
 10 6 10
 # Month of Spawning (1st=cod, 2nd=silver hake, 3rd=herr)
 2 6 10 

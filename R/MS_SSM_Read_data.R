@@ -37,6 +37,10 @@ read.ssm_dat.fn <- function(datf)
   dat$min_A_catch <-  scan(datf, what = integer(), skip = dat.start[ind <- ind + 1],n=dat$sp) 
   dat$max_A_catch <-  scan(datf, what = integer(), skip = dat.start[ind <- ind + 1],n=dat$sp) 
   
+  dat$min_Fbar_idx <-  scan(datf, what = integer(), skip = dat.start[ind <- ind + 1],n=dat$sp) 
+  dat$max_Fbar_idx <-  scan(datf, what = integer(), skip = dat.start[ind <- ind + 1],n=dat$sp) 
+  dat$Fbar_range <- dat$max_Fbar_idx-dat$min_Fbar_idx+1
+  
   month_spawn <- scan(datf, what = double(), skip = dat.start[ind <- ind + 1], n =dat$sp)
   dat$prop_y_elapsed_SSB<-(month_spawn-1)/12
   
