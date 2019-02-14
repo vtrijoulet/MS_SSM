@@ -2,7 +2,6 @@
 
 
 source("R/MS_SSM_shorten.fn.R") # to create new_data and new_init
-library(numDeriv)
 
 
 retro.fn <- function(n){
@@ -25,33 +24,7 @@ retro.fn <- function(n){
   
   sd.rep<-sdreport(obj) # save standard errors of estimates
   rep<-obj$report(obj$env$last.par.best) 
-  
-  se.ADrep <- function (object, sp, FUN){
-    phi <- function(x) FUN(x)
-    ix <- obj$env$ADreportIndex()[[object]][,,sp]
-    covx <- sd.rep$cov[ix, ix]
-    x <- rep[[object]][,,sp]
-    J <- jacobian(phi, x) ## Derivative of phi at x
-    covPhix <- J %*% covx %*% t(J) ## Covariance of phi(x)
-    return(sqrt(diag(covPhix))) # se around phi(x)
-  }
-  mean.F<-array(dim=c(new_data$Y,new_data$sp))
-  se.mean.F<-array(0,dim=c(new_data$Y,new_data$sp))
-  for (i in 1:new_data$sp){
-    mean.F[,i]<-apply(rep$F[,new_data$min_A_catch[i]:new_data$max_A_catch[i],i],1,mean)
-    se.mean.F[,i] <- se.ADrep("F",i,rowMeans)
-  }
-  if (new_data$predation_on==1){
-    mean.PAA.y<-array(dim=c(new_data$Y,new_data$sp))
-    se.mean.PAA.y<-array(dim=c(new_data$Y,new_data$sp))
-    for (i in 1:new_data$sp){
-      mean.PAA.y[,i]<-apply(rep$PAA[,1:new_data$Aplus[i],i],1,mean)
-      se.mean.PAA.y[,i]<-se.ADrep("PAA",i,rowMeans)
-    }
-  }
-  if (new_data$predation_on==1){
-    return(list(data=new_data, init=new_init, map=map, random=random, opt=opt, sd.rep=sd.rep, rep=rep, mean.F=mean.F, se.mean.F=se.mean.F, mean.PAA.y=mean.PAA.y, se.mean.PAA.y=se.mean.PAA.y))
-  } else {
-    return(list(data=new_data, init=new_init, map=map, random=random, opt=opt, sd.rep=sd.rep, rep=rep, mean.F=mean.F, se.mean.F=se.mean.F))
-  }
+
+  return(list(data=new_data, init=new_init, map=map, random=random, opt=opt, sd.rep=sd.rep, rep=rep))
+
 }
