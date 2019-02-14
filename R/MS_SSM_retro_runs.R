@@ -27,25 +27,25 @@ for (i in 1:data$sp){
 # Recruitment
 #par(mfrow=c(data$sp,1), oma=c(3,4,1,1), mar=c(0,0,0,0),xpd=NA)
 for (i in 1:data$sp){
-  plot.time(pred=rep$NAA[,1,i], se=se$NAA[,1,i], ylab=paste0(sp.names[i], " recruitment"), ylim=c(min(rep$NAA[,1,i])*0.8, max(rep$NAA[,1,i])*1.2))
+  plot.time(pred=rep$NAA[,1,i], se=se$recruits[,i], ylab=paste0(sp.names[i], " recruitment"), ylim=c(min(rep$NAA[,1,i])*0.8, max(rep$NAA[,1,i])*1.2))
   if(i==data$sp) axis(1)
   for (n in 1:y) lines(retro_res[[n]]$rep$NAA[,1,i]~years[-((data$Y-n+1):data$Y)], col=n+1)
 }
 
-# mean.F
+# mean_Fy
 #par(mfrow=c(data$sp,1))
 for (i in 1:data$sp){
-  plot.time(pred=mean.F[,i], se=se.mean.F[,i], ylab=paste0(sp.names[i], " mean fishing mortality"), legend=0, ylim=c(min(mean.F[,i]*0.6), max(mean.F[,i]*1.3)))
+  plot.time(pred=rep$mean_Fy[,i], se=se$mean_Fy[,i], ylab=paste0(sp.names[i], " mean fishing mortality"), legend=0, ylim=c(min(rep$mean_Fy[,i]*0.6), max(rep$mean_Fy[,i]*1.3)))
   if (i==data$sp) axis(1)
-  for (n in 1:y) lines((retro_res[[n]]$mean.F[,i])~(years[-((data$Y-n+1):data$Y)]) , col=n+1)
+  for (n in 1:y) lines((retro_res[[n]]$rep$mean_Fy[,i])~(years[-((data$Y-n+1):data$Y)]) , col=n+1)
 }
 
-# mean.P.y
+# mean_Py
 if (data$predation==1){
   for (i in 1:data$sp){
-    plot.time(pred=mean.PAA.y[,i], se=se.mean.PAA.y[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
+    plot.time(pred=rep$mean_Py[,i], se=se$mean_Py[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
     if (i==data$sp) axis(1)
-    for (n in 1:y) lines((retro_res[[n]]$mean.PAA.y[,i])~(years[-((data$Y-n+1):data$Y)]) , col=n+1)
+    for (n in 1:y) lines((retro_res[[n]]$rep$mean_Py[,i])~(years[-((data$Y-n+1):data$Y)]) , col=n+1)
   }
 }
 
