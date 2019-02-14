@@ -27,65 +27,65 @@ for (i in 1:length(names.rep)){
 }
 
 
-#### Calculate mean mortality rates and corresponding CI ####
-
-## Function to estimate se for mean of adereported objects
-require(numDeriv)
-se.ADrep <- function (object, sp, FUN){
-  phi <- function(x) FUN(x)
-  ix <- obj$env$ADreportIndex()[[object]][,,sp]
-  covx <- sd.rep$cov[ix, ix]
-  x <- rep[[object]][,,sp]
-  J <- jacobian(phi, x) ## Derivative of phi at x
-  covPhix <- J %*% covx %*% t(J) ## Covariance of phi(x)
-  return(sqrt(diag(covPhix))) # se around phi(x)
-}
-
-## F
-mean.F<-array(dim=c(data$Y,data$sp))
-se.mean.F<-array(0,dim=c(data$Y,data$sp))
-mean.FAA<-array(dim=c(data$max_A,data$sp))
-se.mean.FAA<-array(0,dim=c(data$max_A,data$sp))
-for (i in 1:data$sp){
-  mean.F[,i]<-apply(rep$F[,data$min_A_catch[i]:data$max_A_catch[i],i],1,mean)
-  se.mean.F[,i] <- se.ADrep("F",i,rowMeans)
-  mean.FAA[data$min_A_catch[i]:data$max_A_catch[i],i]<-apply(rep$F[,data$min_A_catch[i]:data$max_A_catch[i],i],2,mean)
-  se.mean.FAA[,i] <- se.ADrep("F",i,colMeans)
-}
-
-## M 
-mean.MAA<-array(dim=c(data$max_A,data$sp))
-se.mean.MAA<-array(0,dim=c(data$max_A,data$sp))
-for (i in 1:data$sp){
-  mean.MAA[1:data$Aplus[i],i]<-apply(rep$MAA[,1:data$Aplus[i],i],2,mean)
-  se.mean.MAA[,i] <- se.ADrep("MAA",i,colMeans)
-}
-
-## P
-if (data$predation_on==1){
-  mean.PAA<-array(dim=c(data$max_A,data$sp))
-  se.mean.PAA<-array(0,dim=c(data$max_A,data$sp))
-  mean.PAA.y<-array(dim=c(data$Y,data$sp))
-  se.mean.PAA.y<-array(dim=c(data$Y,data$sp))
-  for (i in 1:data$sp){
-    mean.PAA[,i]<-apply(rep$PAA[,,i],2,mean)
-    se.mean.PAA[,i]<-se.ADrep("PAA",i,colMeans)
-    mean.PAA.y[,i]<-apply(rep$PAA[,1:data$Aplus[i],i],1,mean)
-    se.mean.PAA.y[,i]<-se.ADrep("PAA",i,rowMeans)
-  }
-}
-
-## Z
-mean.Z<-array(dim=c(data$max_A,data$sp))
-se.mean.Z<-array(dim=c(data$max_A,data$sp))
-mean.Z.y<-array(dim=c(data$Y,data$sp))
-se.mean.Z.y<-array(dim=c(data$Y,data$sp))
-for (i in 1:data$sp){
-  mean.Z[,i]<-apply(rep$Z[,,i],2,mean)
-  se.mean.Z[,i]<-se.ADrep("Z",i,colMeans)
-  mean.Z.y[,i]<-apply(rep$Z[,1:data$Aplus[i],i],1,mean)
-  se.mean.Z.y[,i]<-se.ADrep("Z",i,rowMeans)
-}
+# #### Calculate mean mortality rates and corresponding CI ####
+# 
+# ## Function to estimate se for mean of adereported objects
+# require(numDeriv)
+# se.ADrep <- function (object, sp, FUN){
+#   phi <- function(x) FUN(x)
+#   ix <- obj$env$ADreportIndex()[[object]][,,sp]
+#   covx <- sd.rep$cov[ix, ix]
+#   x <- rep[[object]][,,sp]
+#   J <- jacobian(phi, x) ## Derivative of phi at x
+#   covPhix <- J %*% covx %*% t(J) ## Covariance of phi(x)
+#   return(sqrt(diag(covPhix))) # se around phi(x)
+# }
+# 
+# ## F
+# mean.F<-array(dim=c(data$Y,data$sp))
+# se.mean.F<-array(0,dim=c(data$Y,data$sp))
+# mean.FAA<-array(dim=c(data$max_A,data$sp))
+# se.mean.FAA<-array(0,dim=c(data$max_A,data$sp))
+# for (i in 1:data$sp){
+#   mean.F[,i]<-apply(rep$F[,data$min_A_catch[i]:data$max_A_catch[i],i],1,mean)
+#   se.mean.F[,i] <- se.ADrep("F",i,rowMeans)
+#   mean.FAA[data$min_A_catch[i]:data$max_A_catch[i],i]<-apply(rep$F[,data$min_A_catch[i]:data$max_A_catch[i],i],2,mean)
+#   se.mean.FAA[,i] <- se.ADrep("F",i,colMeans)
+# }
+# 
+# ## M 
+# mean.MAA<-array(dim=c(data$max_A,data$sp))
+# se.mean.MAA<-array(0,dim=c(data$max_A,data$sp))
+# for (i in 1:data$sp){
+#   mean.MAA[1:data$Aplus[i],i]<-apply(rep$MAA[,1:data$Aplus[i],i],2,mean)
+#   se.mean.MAA[,i] <- se.ADrep("MAA",i,colMeans)
+# }
+# 
+# ## P
+# if (data$predation_on==1){
+#   mean.PAA<-array(dim=c(data$max_A,data$sp))
+#   se.mean.PAA<-array(0,dim=c(data$max_A,data$sp))
+#   mean.PAA.y<-array(dim=c(data$Y,data$sp))
+#   se.mean.PAA.y<-array(dim=c(data$Y,data$sp))
+#   for (i in 1:data$sp){
+#     mean.PAA[,i]<-apply(rep$PAA[,,i],2,mean)
+#     se.mean.PAA[,i]<-se.ADrep("PAA",i,colMeans)
+#     mean.PAA.y[,i]<-apply(rep$PAA[,1:data$Aplus[i],i],1,mean)
+#     se.mean.PAA.y[,i]<-se.ADrep("PAA",i,rowMeans)
+#   }
+# }
+# 
+# ## Z
+# mean.Z<-array(dim=c(data$max_A,data$sp))
+# se.mean.Z<-array(dim=c(data$max_A,data$sp))
+# mean.Z.y<-array(dim=c(data$Y,data$sp))
+# se.mean.Z.y<-array(dim=c(data$Y,data$sp))
+# for (i in 1:data$sp){
+#   mean.Z[,i]<-apply(rep$Z[,,i],2,mean)
+#   se.mean.Z[,i]<-se.ADrep("Z",i,colMeans)
+#   mean.Z.y[,i]<-apply(rep$Z[,1:data$Aplus[i],i],1,mean)
+#   se.mean.Z.y[,i]<-se.ADrep("Z",i,rowMeans)
+# }
 
 
 #### Plot functions ####
@@ -181,7 +181,7 @@ for (i in 1:data$sp){
 #plot recruits
 #par(mfrow=c(data$sp,1), oma=c(3,4,1,1), mar=c(0,0,0,0),xpd=NA)
 for (i in 1:data$sp){
-  plot.time(pred=rep$NAA[,1,i], se=se$NAA[,1,i], ylab=paste0(sp.names[i], " recruitment"))
+  plot.time(pred=rep$NAA[,1,i], se=se$recruits[,i], ylab=paste0(sp.names[i], " recruitment"))
   if(i==data$sp) axis(1)
 }
 
@@ -215,13 +215,13 @@ for (i in 1:data$sp){
 # Plot F
 #par(mfrow=c(data$sp,1))
 for (i in 1:data$sp){
-  plot.time(pred=mean.F[,i], se=se.mean.F[,i], ylab=paste0(sp.names[i], " mean fishing mortality"), legend=0)
+  plot.time(pred=rep$mean_Fy[,i], se=se$mean_Fy[,i], ylab=paste0(sp.names[i], " mean fishing mortality"), legend=0)
   if (i==data$sp) axis(1)
 }
 
 #par(mfrow=c(data$sp,1))
 for (i in 1:data$sp){
-  plot.age(pred=mean.FAA[data$min_A_catch[i]:data$max_A_catch[i],i], se.mean.FAA[data$min_A_catch[i]:data$max_A_catch[i],i], age=data$min_A_catch[i]:data$max_A_catch[i], ylab=paste0("Mean fishing mortality"))
+  plot.age(pred=rep$mean_FAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], se=se$mean_FAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], age=data$min_Fbar_idx[i]:data$max_Fbar_idx[i], ylab=paste0("Mean fishing mortality"))
   if (i==data$sp) axis(1)
 }
 
@@ -256,10 +256,16 @@ for (i in 1:data$sp) {
   if (i==data$sp) axis(1)
 }
 
-# par(mfrow=c(data$sp,1))
-# for (i in 1:data$sp){
-#   plot.age(pred=mean.MAA[1:data$Aplus[i],i], se=se.mean.MAA[1:data$Aplus[i],i], age=1:data$Aplus[i], ylab="Mean natural mortality")
-# }
+#par(mfrow=c(data$sp,1))
+for (i in 1:data$sp){
+  plot.time(pred=rep$mean_My[,i], se=se$mean_My[,i], ylab=paste0(sp.names[i], " mean natural mortality"), legend=0)
+  if (i==data$sp) axis(1)
+}
+
+#par(mfrow=c(data$sp,1))
+for (i in 1:data$sp){
+  plot.age(pred=rep$mean_MAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], se=se$mean_MAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], age=data$min_Fbar_idx[i]:data$max_Fbar_idx[i], ylab="Mean natural mortality")
+}
 
 
 
@@ -267,11 +273,11 @@ for (i in 1:data$sp) {
 #par(mfrow=c(data$sp,1))
 if (data$predation_on==1){
   for (i in 1:data$sp){
-    plot.age(pred=mean.PAA[1:data$Aplus[i],i], se=se.mean.PAA[1:data$Aplus[i],i], age=1:data$Aplus[i], ylab="Mean predation mortality")
+    plot.age(pred=rep$mean_PAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], se=se$mean_PAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], age=data$min_Fbar_idx[i]:data$max_Fbar_idx[i], ylab="Mean predation mortality")
     if (i==data$sp) axis(1)
   }
   for (i in 1:data$sp){
-    plot.time(pred=mean.PAA.y[,i], se=se.mean.PAA.y[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
+    plot.time(pred=rep$mean.Py[,i], se=se$mean_Py[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
     if (i==data$sp) axis(1)
   }
   
@@ -300,11 +306,11 @@ if (data$predation_on==1){
 
 #par(mfrow=c(data$sp,1))
 for (i in 1:data$sp){
-  plot.age(pred=mean.Z[1:data$Aplus[i],i], se=se.mean.Z[1:data$Aplus[i],i], age=1:data$Aplus[i], ylab="Mean total mortality")
+  plot.age(pred=rep$mean_ZAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], se=se$mean_ZAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], age=data$min_Fbar_idx[i]:data$max_Fbar_idx[i], ylab="Mean total mortality")
   if (i==data$sp) axis(1)
 }
 for (i in 1:data$sp){
-  plot.time(pred=mean.Z.y[,i], se=se.mean.Z.y[,i], ylab=paste0("Mean total mortality on ", sp.names[i]))
+  plot.time(pred=rep$mean_Zy[,i], se=se$mean_Zy[,i], ylab=paste0("Mean total mortality on ", sp.names[i]))
   if (i==data$sp) axis(1)
 }
 #par(mfrow=c(data$sp,1))
