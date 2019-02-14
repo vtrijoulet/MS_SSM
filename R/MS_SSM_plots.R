@@ -277,7 +277,7 @@ if (data$predation_on==1){
     if (i==data$sp) axis(1)
   }
   for (i in 1:data$sp){
-    plot.time(pred=rep$mean.Py[,i], se=se$mean_Py[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
+    plot.time(pred=rep$mean_Py[,i], se=se$mean_Py[,i], ylab=paste0("Mean predation mortality on ", sp.names[i]))
     if (i==data$sp) axis(1)
   }
   
@@ -326,20 +326,35 @@ for (i in 1:data$sp) {
 #Area plot mortalities
 col<-c("deepskyblue3","midnightblue","darkolivegreen3")
 if (data$predation_on==0) {
-  mean.PAA=mean.MAA
-  mean.PAA[]=0
+  rep$mean_PAA=rep$mean_MAA
+  rep$mean_PAA[]=0
 }
-M=mean.PAA+mean.MAA
+M=rep$mean_PAA+rep$mean_MAA
 #par(mfrow=c(data$sp,1))
 for (i in 1:data$sp){
-  plot(mean.Z[1:data$Aplus[i],i],xaxt="n", type="n", xlab="",ylab=paste0("Total mortality on ", sp.names[i]),ylim=c(0,max(mean.Z[1:data$Aplus[i],i])))
-  polygon(x=c(1:data$Aplus[i],rev(1:data$Aplus[i])), c(mean.PAA[1:data$Aplus[i],i], rev(rep(0,data$Aplus[i]))),col=col[1],border=NA)
-  polygon(x=c(1:data$Aplus[i],rev(1:data$Aplus[i])), c(M[1:data$Aplus[i],i], rev(mean.PAA[1:data$Aplus[i],i])),col=col[2],border=NA)
-  polygon(x=c(1:data$Aplus[i],rev(1:data$Aplus[i])), c(mean.Z[1:data$Aplus[i],i], rev(M[1:data$Aplus[i],i])),col=col[3],border=NA)
+  age=(data$min_Fbar_idx[i]:data$max_Fbar_idx[i])
+  plot(rep$mean_ZAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i]~age,xaxt="n", type="n", xlab="",ylab=paste0("Total mortality on ", sp.names[i]),ylim=c(0,max(rep$mean_ZAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i])))
+  polygon(x=c(data$min_Fbar_idx[i]:data$max_Fbar_idx[i],rev(data$min_Fbar_idx[i]:data$max_Fbar_idx[i])), c(rep$mean_PAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], rev(rep(0,length(data$min_Fbar_idx[i]:data$max_Fbar_idx[i])))),col=col[1],border=NA)
+  polygon(x=c(data$min_Fbar_idx[i]:data$max_Fbar_idx[i],rev(data$min_Fbar_idx[i]:data$max_Fbar_idx[i])), c(M[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], rev(rep$mean_PAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i])),col=col[2],border=NA)
+  polygon(x=c(data$min_Fbar_idx[i]:data$max_Fbar_idx[i],rev(data$min_Fbar_idx[i]:data$max_Fbar_idx[i])), c(rep$mean_ZAA[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i], rev(M[data$min_Fbar_idx[i]:data$max_Fbar_idx[i],i])),col=col[3],border=NA)
   if (i==1) if (data$predation==1) legend("topleft", legend=rev(c("P", "M", "F")), fill=rev(col), border=NA, bty="n") else legend("topleft", legend=rev(c("M", "F")), fill=rev(col), border=NA, bty="n")
   if (i==data$sp) axis(1)
 }
 
+if (data$predation_on==0) {
+  rep$mean_Py=rep$mean_My
+  rep$mean_Py[]=0
+}
+My=rep$mean_Py+rep$mean_My
+#par(mfrow=c(data$sp,1))
+for (i in 1:data$sp){
+  plot(rep$mean_Zy[,i]~years,xaxt="n", type="n", xlab="",ylab=paste0("Total mortality on ", sp.names[i]),ylim=c(0,max(rep$mean_Zy[,i])))
+  polygon(x=c(years,rev(years)), c(rep$mean_Py[,i], rev(rep(0,data$Y))),col=col[1],border=NA)
+  polygon(x=c(years,rev(years)), c(My[,i], rev(rep$mean_Py[,i])),col=col[2],border=NA)
+  polygon(x=c(years,rev(years)), c(rep$mean_Zy[,i], rev(My[,i])),col=col[3],border=NA)
+  if (i==1) if (data$predation==1) legend("topleft", legend=rev(c("P", "M", "F")), fill=rev(col), border=NA, bty="n") else legend("topleft", legend=rev(c("M", "F")), fill=rev(col), border=NA, bty="n")
+  if (i==data$sp) axis(1)
+}
 
 
 
