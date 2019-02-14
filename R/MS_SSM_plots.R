@@ -1,6 +1,6 @@
 years<-min(data$year1):data$lastyear
 Y1<-min(data$year1)
-sp.names<-c("cod","silH","herr")
+sp.names<-attr(data,"sp_names")
 z.stat <- 1.96
 
 name.folder<-paste(paste(sp.names,collapse ="_"),"_",Y1,"-",data$lastyear,"_rec",data$recruit_model,

@@ -7,6 +7,8 @@
 # 2015 Updated data: 1967-2014
 # Number of modelled species=sp
 1
+# Species names
+herring
 # Interaction matrix (sp,sp) row=prey, col=predator (0=predator doesn't eat prey, 1=predator eats prey) #by default keep at least one 1
 1
 # First Year per species (1965 for herring but food habit data starts in 1973)

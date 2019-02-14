@@ -14,7 +14,7 @@ read.ssm_dat.fn <- function(datf)
   dat$sp <- scan(datf, what = integer(), skip = dat.start[ind <- ind + 1], n = 1) #number of modelled species
   dat$n_prey<-dat$sp+1 # modelled species + other food
   
-  #dat$sp_names <- scan(datf, what = character(), skip = dat.start[ind <- ind + 1], n = dat$sp)
+  attr(dat,"sp_names") <- scan(datf, what = character(), skip = dat.start[ind <- ind + 1], n = dat$sp)
   
   dat$interaction <- matrix(scan(datf, what = integer(), skip = dat.start[ind <- ind + 1], n = dat$sp*dat$sp), dat$sp, dat$sp, byrow = TRUE)
   
