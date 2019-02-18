@@ -495,10 +495,13 @@ Type objective_function<Type>::operator() ()
       if (process_rec==1){ // random recruitment
         if (recruit_model==1){
           pred_NAA(t,0,i)=NAA(t-1,0,i); //random walk recruitment
+        } else {
+          if (recruit_model==2){ 
+            pred_NAA(t,0,i)=exp(mean_log_rec(i)); //random about the mean
+          } else {
+            Rf_error("recruit_model does not exist");
+          }
         }
-        if (recruit_model==2){ 
-          pred_NAA(t,0,i)=exp(mean_log_rec(i)); //random about the mean
-        } 
         //////// PROCESS ERRORS RECRUITMENT ////////
         // NLL for process error recruitment
         nll_log_rec -= dnorm(log(NAA(t,0,i)),log(pred_NAA(t,0,i)),sd_log_rec(i),1); // Random recruitment
