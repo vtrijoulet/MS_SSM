@@ -30,9 +30,11 @@ lm_coeff=reg$coefficients
 data$age_pred <- diet_data$length_pred
 
 for (t in 1:data$Y){
-  for (n in 1:data$n_stom[t,1]) { # 1 because just for cod
-    data$age_pred[n,t,1]<-round(exp(log(diet_data$length_pred[n,t,1])*lm_coeff[2]+lm_coeff[1]))
-    if (data$age_pred[n,t,1]==0) data$age_pred[n,t,1] <- 1 # change age 0 into age 1
+  for (j in 1:data$n_pred) {
+    for (n in 1:data$n_stom[t,j]) {
+      data$age_pred[n,t,j]<-round(exp(log(diet_data$length_pred[n,t,j])*lm_coeff[2]+lm_coeff[1]))
+      if (data$age_pred[n,t,j]==0) data$age_pred[n,t,j] <- 1 # change age 0 into age 1
+    }
   }
 }
 
