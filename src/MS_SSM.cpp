@@ -1028,7 +1028,7 @@ Type objective_function<Type>::operator() ()
       } // close t
       } else { // flag_nll_diet != 1 or 2 or 3 so flag_nll_diet = 4 or 5
 
-        if (flag_nll_diet==4){ // 10 years average
+        if (flag_nll_diet==4){ // xmax years average
 
           for(int b = 0; b < Bplus(j); b++){
             for(int i = 0; i < n_prey; i++){ // n_prey because modelled prey + other food
