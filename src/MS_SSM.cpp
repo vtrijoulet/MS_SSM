@@ -1284,17 +1284,20 @@ Type objective_function<Type>::operator() ()
         for(int a = (min_A_surv(i,k)-1); a < max_A_surv(i,k); a++){
           s_surv(a,i,k)=1/(1+exp(-logit_s_surv(a,i,k)));
         }
-      }
-      if (sel_model_surv(i,k)==2){ //logistic selectivity
-        //Survey parameters
-        A50_surv(i,k)=max_A_surv(i,k)/(1+exp(-logit_A50_surv(i,k))); // logit scale for A50 with lower bound =0 and upper band =Aplus
-        gamma_surv(i,k)=max_A_surv(i,k)/(1+exp(-logit_gamma_surv(i,k))); 
-        //Survey selectivity
-        for(int a = (min_A_surv(i,k)-1); a < max_A_surv(i,k); a++){
-          s_surv(a,i,k)=1/(1+exp(-((a+1)-A50_surv(i,k))/gamma_surv(i,k)));
-        }
-        for(int a = (min_A_surv(i,k)-1); a < max_A_surv(i,k); a++){
-          s_surv(a,i,k) = s_surv(a,i,k)/s_surv((max_A_surv(i,k)-1),i,k); // so selectivity is forced to be 1 for last age
+      } else {
+        if (sel_model_surv(i,k)==2){ //logistic selectivity
+          //Survey parameters
+          A50_surv(i,k)=max_A_surv(i,k)/(1+exp(-logit_A50_surv(i,k))); // logit scale for A50 with lower bound =0 and upper band =Aplus
+          gamma_surv(i,k)=max_A_surv(i,k)/(1+exp(-logit_gamma_surv(i,k))); 
+          //Survey selectivity
+          for(int a = (min_A_surv(i,k)-1); a < max_A_surv(i,k); a++){
+            s_surv(a,i,k)=1/(1+exp(-((a+1)-A50_surv(i,k))/gamma_surv(i,k)));
+          }
+          for(int a = (min_A_surv(i,k)-1); a < max_A_surv(i,k); a++){
+            s_surv(a,i,k) = s_surv(a,i,k)/s_surv((max_A_surv(i,k)-1),i,k); // so selectivity is forced to be 1 for last age
+          }
+        } else {
+          Rf_error("sel_model_surv option does not exist");
         }
       }
       
