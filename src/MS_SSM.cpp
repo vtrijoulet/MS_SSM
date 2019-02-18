@@ -1330,7 +1330,7 @@ Type objective_function<Type>::operator() ()
           t_paa(a) = obs_prop_Iaa(t,a,i,k);
         }
         // flags which say if annual index estimates should be used or not for specific species
-        if (flag_Iaa(t,i,k)==1){
+        if (flag_Iaa(t,i,k)==1){ 
           nll_prop_Iaa -= get_acomp_ll(Y, min_A_surv(i,k)-1, max_A_surv(i,k), Neff_surv(t,i,k), age_comp_model_indices(i), t_paa, t_pred_paa, acomp_pars, index_aref(t,i,k));
           if (data_simulate==1){
             SIMULATE {
