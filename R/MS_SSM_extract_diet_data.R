@@ -23,7 +23,7 @@ extract_diet_data_fn <- function(diet.file){
     
     diet.sp<-diet[diet$predator==sp_names[j],]
     
-    name_matrix<-paste("~/NOAA/Foodhabitsdata/Brian's data/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
+    name_matrix<-paste("data/NOAA/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
     l.a.conv.ageplus<-read.csv(name_matrix,header=FALSE)
     
     
