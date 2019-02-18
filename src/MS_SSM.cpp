@@ -285,17 +285,20 @@ Type objective_function<Type>::operator() ()
       for(int a = (min_A_catch(i)-1); a < max_A_catch(i); a++){
         s_F(a,i)=1/(1+exp(-logit_s_F(a,i)));
       }
-    }
-    if (sel_model_F(i)==2){ //logistic selectivity
-      //fishing parameters
-      A50_F(i)=max_A_catch(i)/(1+exp(-logit_A50_F(i))); // logit scale for A50 with lower bound =0 and upper band =Aplus
-      gamma_F(i)=max_A_catch(i)/(1+exp(-logit_gamma_F(i)));
-      //fishing selectivity
-      for(int a = (min_A_catch(i)-1); a < max_A_catch(i); a++){
-        s_F(a,i)=1/(1+exp(-((a+1)-A50_F(i))/gamma_F(i)));
-      }
-      for(int a = (min_A_catch(i)-1); a < max_A_catch(i); a++){
-        s_F(a,i) = s_F(a,i)/s_F((max_A_catch(i)-1),i); // so selectivity is forced to be 1 for last age
+    } else {
+      if (sel_model_F(i)==2){ //logistic selectivity
+        //fishing parameters
+        A50_F(i)=max_A_catch(i)/(1+exp(-logit_A50_F(i))); // logit scale for A50 with lower bound =0 and upper band =Aplus
+        gamma_F(i)=max_A_catch(i)/(1+exp(-logit_gamma_F(i)));
+        //fishing selectivity
+        for(int a = (min_A_catch(i)-1); a < max_A_catch(i); a++){
+          s_F(a,i)=1/(1+exp(-((a+1)-A50_F(i))/gamma_F(i)));
+        }
+        for(int a = (min_A_catch(i)-1); a < max_A_catch(i); a++){
+          s_F(a,i) = s_F(a,i)/s_F((max_A_catch(i)-1),i); // so selectivity is forced to be 1 for last age
+        }
+      } else {
+        Rf_error("sel_model_F option does not exist");
       }
     }
   }
@@ -373,34 +376,41 @@ Type objective_function<Type>::operator() ()
       for(int t = 0; t < Y; t++){
         if (M_model(i)==1){
           MAA(t,a,i)=M(t,a,i); // M is given as input data
-        }
-        if (M_model(i)==2){
-          if (process_M==1){
-            if (t > 0){
-              MAA(t,a,i)=exp(log_MAA(t-1,a,i)); // random walk M
-              pred_MAA(t,a,i)=MAA(t-1,a,i);
-              //////// PROCESS ERRORS AND PRIORS M ////////
-              // NLL for process error M
-              nll_log_MAA -= dnorm(log_MAA(t-1,a,i),log(pred_MAA(t,a,i)),sd_log_MAA(i),1); // Random walk M
-              // OR nll_log_MAA -= dnorm(log(MAA(t,a,i)),log(pred_MAA(t,a,i)),sd_log_MAA(i),1); // Random walk M
-              if (error_simulate==1){
-                SIMULATE {
-                  log_MAA(t-1,a,i) = rnorm(log(pred_MAA(t,a,i)), sd_log_MAA(i));
-                  REPORT(log_MAA);
-                  MAA(t,a,i)=exp(log_MAA(t-1,a,i));
-                  REPORT(MAA);
+        } else {
+          if (M_model(i)==2){
+            if (process_M==1){
+              if (t > 0){
+                MAA(t,a,i)=exp(log_MAA(t-1,a,i)); // random walk M
+                pred_MAA(t,a,i)=MAA(t-1,a,i);
+                //////// PROCESS ERRORS AND PRIORS M ////////
+                // NLL for process error M
+                nll_log_MAA -= dnorm(log_MAA(t-1,a,i),log(pred_MAA(t,a,i)),sd_log_MAA(i),1); // Random walk M
+                // OR nll_log_MAA -= dnorm(log(MAA(t,a,i)),log(pred_MAA(t,a,i)),sd_log_MAA(i),1); // Random walk M
+                if (error_simulate==1){
+                  SIMULATE {
+                    log_MAA(t-1,a,i) = rnorm(log(pred_MAA(t,a,i)), sd_log_MAA(i));
+                    REPORT(log_MAA);
+                    MAA(t,a,i)=exp(log_MAA(t-1,a,i));
+                    REPORT(MAA);
+                  }
+                }
+              }
+            } else {
+              MAA(t,a,i)=exp(log_M(t,a,i)); // M is an estimated matrix
+            }
+          } else {
+            if (M_model(i)==3){
+              MAA(t,a,i)=exp(log_lorenzen1(i)+lorenzen2(i)*log(wc(t,a,i)*1000)); // Lorenzen M with priors on parameters, w must be in grams
+            } else {
+              if (M_model(i)==4){
+                MAA(t,a,i)=scale_M(a,i)*M(t,a,i); // rescaled M from input data
+              } else {
+                if (M_model(i)!=5){
+                  Rf_error("M_model option does not exist");
                 }
               }
             }
-          } else {
-            MAA(t,a,i)=exp(log_M(t,a,i)); // M is an estimated matrix
           }
-        }
-        if (M_model(i)==3){
-          MAA(t,a,i)=exp(log_lorenzen1(i)+lorenzen2(i)*log(wc(t,a,i)*1000)); // Lorenzen M with priors on parameters, w must be in grams
-        }
-        if (M_model(i)==4){
-          MAA(t,a,i)=scale_M(a,i)*M(t,a,i); // rescaled M from input data
         }
       }
     }
