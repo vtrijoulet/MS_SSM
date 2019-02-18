@@ -11,7 +11,7 @@
 ///////////////////////////////////////// START OF OBJECTIVE FUNCTION ///////////////////////////////////////////////////////
 
   
-template <class Type>  
+template <class Type>   
 Type objective_function<Type>::operator() () 
 {
   // Input data
@@ -1098,50 +1098,53 @@ Type objective_function<Type>::operator() ()
               //see(nll_ratio_diet);
             }
           }
-        } else { // flag_nll_diet==5, ratio averaged over whole time series
-
-          for (int p = 0; p < 3; p++){ // log(phi)=precision, log(slope) and intercept for delta dirichlet
-            for (int t = 0; t < Y; t++){
-              par_ratio(p) += par_deltadir(t,p,j)/Y;
-            }
-          }
-          //see(par_ratio);
-
-          for(int b = 0; b < Bplus(j); b++){
-            int n_size = 0;
-            obs_ratio.setZero();
-            pred_ratio.setZero();
-            for(int i = 0; i < n_prey; i++){ // n_prey because modelled prey + other food
+        } else {
+          if (flag_nll_diet==5){ // flag_nll_diet==5, ratio averaged over whole time series
+            for (int p = 0; p < 3; p++){ // log(phi)=precision, log(slope) and intercept for delta dirichlet
               for (int t = 0; t < Y; t++){
-                obs_ratio(i) += ratio_diet3(t,i,b,j)/Y;
-                pred_ratio(i) += ratio_biomass_all_prey_avail_no_age(t,i,b,j)/Y;
-              }
-              if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
-                n_size++;
+                par_ratio(p) += par_deltadir(t,p,j)/Y;
               }
             }
-            //see(obs_ratio);
-            //see(n_size);
-            vector<Type> pred_ratio2(n_size);
-            vector<Type> obs_ratio2(n_size);
-            int n = 0;
-            for(int i = 0; i < n_prey; i++){
-              if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
-                pred_ratio2(n) = pred_ratio(i);
-                obs_ratio2(n) = obs_ratio(i);
-                n++;
+            //see(par_ratio);
+  
+            for(int b = 0; b < Bplus(j); b++){
+              int n_size = 0;
+              obs_ratio.setZero();
+              pred_ratio.setZero();
+              for(int i = 0; i < n_prey; i++){ // n_prey because modelled prey + other food
+                for (int t = 0; t < Y; t++){
+                  obs_ratio(i) += ratio_diet3(t,i,b,j)/Y;
+                  pred_ratio(i) += ratio_biomass_all_prey_avail_no_age(t,i,b,j)/Y;
+                }
+                if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
+                  n_size++;
+                }
               }
+              //see(obs_ratio);
+              //see(n_size);
+              vector<Type> pred_ratio2(n_size);
+              vector<Type> obs_ratio2(n_size);
+              int n = 0;
+              for(int i = 0; i < n_prey; i++){
+                if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
+                  pred_ratio2(n) = pred_ratio(i);
+                  obs_ratio2(n) = obs_ratio(i);
+                  n++;
+                }
+              }
+              pred_ratio2 = pred_ratio2/pred_ratio2.sum();
+              obs_ratio2 = obs_ratio2/obs_ratio2.sum();
+              //see(pred_ratio2);
+              //see(obs_ratio2);
+              //see(pred_ratio2.size());
+              if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
+                if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
+                if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+              }
+              //see(nll_ratio_diet);
             }
-            pred_ratio2 = pred_ratio2/pred_ratio2.sum();
-            obs_ratio2 = obs_ratio2/obs_ratio2.sum();
-            //see(pred_ratio2);
-            //see(obs_ratio2);
-            //see(pred_ratio2.size());
-            if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
-              if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
-              if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
-            }
-            //see(nll_ratio_diet);
+          } else {
+            Rf_error("flag_nll_diet option does not exist");
           }
         }
       }
