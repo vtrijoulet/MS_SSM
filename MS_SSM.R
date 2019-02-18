@@ -52,7 +52,7 @@ data$recruit_model<-2 # only used when process_rec=1: 1=ramdom walk, 2=random ab
 
 data$process_rec<-1 # 1=process error on recruitemnt log_rec, 0= no process error
 data$process_survival<-1 # 1=process error on survival log_NAA, 0 = noprocess error
-data$process_F <- 1
+data$process_F <- 1 # 1=AR1 on log_E
 
 data$M_model<-rep(1,data$sp) # 1= M is given as input, 2 = M is an estd matrix (if process_M=0) or a random walk (if process_M=1), 3=Lorenzen, 4=scaled from assessment, 5= M=input M-PAA
 data$process_M<-0 # 1= stochastic M for M_model 2 and 3 only, 0= no process error
@@ -60,7 +60,7 @@ data$process_M<-0 # 1= stochastic M for M_model 2 and 3 only, 0= no process erro
 data$data_simulate <-1 # simulate data, 0=no, 1=yes
 data$error_simulate <-1 # simulate process errors, 0=no, 1=yes
 data$diet_model <-2 # 1= ddeltadirichlet, 2=ddirichlet
-data$flag_nll_diet <- 3 # 1=initial model with probs, 2=new simplified model
+data$flag_nll_diet <- 3 # 1=diet fitted per stomach when age predator unknown , 2=diet fitted per stomach with age predator known, 3=diet fitted to annual average proportions in stomachs, 4=diet fitted to stomach prop averaged over data$xmax years, 5= diet fitted to stomach prop averaged over entire time series 
 
 # For trophic interactions
 data$predation_on <- 0 # 0=predation mortality=0, 1=predation on

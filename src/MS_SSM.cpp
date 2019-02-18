@@ -3,7 +3,7 @@
 #include <cmath> /// for functions such as power pow()  
 #include "MS_SSM_functions.h" // File that contains the functions used within this script
 
-#define see(object) std::cout << #object ":\n" << object << "\n"; // To print the results after objective function
+#define see(object) std::cout << #object ":\n" << object << "\n"; // To print things of interest
 
   
   
