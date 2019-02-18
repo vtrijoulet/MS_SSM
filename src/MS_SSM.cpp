@@ -756,15 +756,18 @@ Type objective_function<Type>::operator() ()
             // Biomass of other food available to j in tons
             if (biomass_other_option==1){ // biomass other food is cst
               biomass_other_avail(t,b,j) = pow(B_other,power_typeIII(j))*suit_other(t,b,j);// Type II if power_typeIII not estimated (NAs in map argument) otherwise type III, assume suit_other=1
-            }
-            if (biomass_other_option==2){
-              total_predation_other(t) += cons_rate(b,j)*NAA(t,b,j)*(biomass_other_avail(t,b,j) / (total_biomass_prey_avail(t,b,j)+biomass_other_avail(t,b,j))); // kg/y
-              Type eps = Type(1.0);
-              Type pen = Type(0.0);
-              if (t<(Y-1))
-                biomass_other(t+1) = posfun(biomass_other(t)+growth_other*biomass_other(t)*(1-biomass_other(t)/K_other)-(total_predation_other(t)/1000),eps,pen);
-              biomass_other_avail(t,b,j) = biomass_other(t);
-              NLL += 1.0E+20*pen;
+            } else {
+              if (biomass_other_option==2){
+                total_predation_other(t) += cons_rate(b,j)*NAA(t,b,j)*(biomass_other_avail(t,b,j) / (total_biomass_prey_avail(t,b,j)+biomass_other_avail(t,b,j))); // kg/y
+                Type eps = Type(1.0);
+                Type pen = Type(0.0);
+                if (t<(Y-1))
+                  biomass_other(t+1) = posfun(biomass_other(t)+growth_other*biomass_other(t)*(1-biomass_other(t)/K_other)-(total_predation_other(t)/1000),eps,pen);
+                biomass_other_avail(t,b,j) = biomass_other(t);
+                NLL += 1.0E+20*pen;
+              } else {
+                Rf_error("biomass_other_option does not exist");
+              }
             }
             // Ratio for nll_ratio_diet for modelled prey
             for(int i = 0; i < sp; i++){
