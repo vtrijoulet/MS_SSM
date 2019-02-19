@@ -73,7 +73,7 @@ data$biomass_other_option <- 1 # Option model biomass_other, 1=cst, 2=surplus pr
 
 #### For trophic interactions
 if (data$predation_on==1){
-  #diet_data<-extract_diet_data_fn("~/NOAA/Foodhabitsdata/Brian's data/diet_GB_All_10sp_with_empty.csv")
+  #diet_data<-extract_diet_data_fn("data/NOAA/diet_GB_All_10sp_with_empty.csv")
   diet_data<-fake_diet_fn()
   data$age_pred <- diet_data$age_pred
   data$prob_l_given_b <- diet_data$prob_l_given_b # (l,Y,max_B,n_pred)
