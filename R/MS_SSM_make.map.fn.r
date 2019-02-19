@@ -231,6 +231,10 @@ make.map.fn = function(data)
     }
     if (data$functional_response==1){
       map$log_power_typeIII<-rep(NA,data$n_pred) # no estimated power when type II functional response
+    } else {
+      if (data$functional_response!=2){
+        stop("functional_response option does not exist")
+      }
     }
     if (data$cons_rate_estim==0){
       map$log_cons_rate <- array(NA,dim=c(data$max_B,data$n_pred))
