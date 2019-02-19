@@ -960,8 +960,15 @@ Type objective_function<Type>::operator() ()
           //see(pred_ratio2);
           //if (t==0 && j==0 && l==4) see(obs_ratio2);
            if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
-             if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
-             if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+             if (diet_model==1) {
+               nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
+             } else {
+               if (diet_model==2) {
+                 nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+               } else {
+                 Rf_error("diet_model option does not exist, estimation not possible");
+               }
+             }
            }
            //if (l==1) see(nll_ratio_diet);
            if (data_simulate==1){
@@ -969,8 +976,15 @@ Type objective_function<Type>::operator() ()
                //if (pred_ratio2.size()!=0){
                //vector<Type> ratio(pred_ratio2.size());
                obs_ratio2.setZero();
-               if (diet_model==1) obs_ratio2 = rdeltadir(pred_ratio2,par_ratio);
-               if (diet_model==2) obs_ratio2 = rdirichlet(pred_ratio2,exp(par_ratio(0)));
+               if (diet_model==1) {
+                 obs_ratio2 = rdeltadir(pred_ratio2,par_ratio);
+               } else {
+                 if (diet_model==2){
+                   obs_ratio2 = rdirichlet(pred_ratio2,exp(par_ratio(0)));
+                 } else {
+                   Rf_error("diet_model option does not exist, simulation not possible");
+                 }
+               }
                int k = 0;
                for(int i = 0; i < n_prey; i++){
                  if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
@@ -1013,8 +1027,15 @@ Type objective_function<Type>::operator() ()
             // see(pred_ratio2);
             // see(obs_ratio2);
             if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
-              if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
-              if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+              if (diet_model==1){
+                nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
+              } else {
+                if (diet_model==2){
+                  nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+                  } else {
+                    Rf_error("diet_model option does not exist, estimation not possible");
+                }
+              }
             }
             //see(nll_ratio_diet);
             //if (l==1) see(nll_ratio_diet);
@@ -1023,8 +1044,15 @@ Type objective_function<Type>::operator() ()
                 //if (pred_ratio2.size()!=0){
                 //vector<Type> ratio(pred_ratio2.size());
                 obs_ratio2.setZero();
-                if (diet_model==1) obs_ratio2 = rdeltadir(pred_ratio2,par_ratio);
-                if (diet_model==2) obs_ratio2 = rdirichlet(pred_ratio2,exp(par_ratio(0)));
+                if (diet_model==1){
+                  obs_ratio2 = rdeltadir(pred_ratio2,par_ratio);
+                } else {
+                  if (diet_model==2){
+                    obs_ratio2 = rdirichlet(pred_ratio2,exp(par_ratio(0)));
+                  } else {
+                    Rf_error("diet_model option does not exist, simulation not possible");
+                  }
+                }
                 int k = 0;
                 for(int i = 0; i < n_prey; i++){
                   if (pred_ratio(i)!=0 && obs_ratio(i)!=0){
@@ -1092,8 +1120,15 @@ Type objective_function<Type>::operator() ()
               obs_ratio2 = obs_ratio2/obs_ratio2.sum();
               //see(pred_ratio2);
               if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
-                if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
-                if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+                if (diet_model==1){
+                  nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
+                } else {
+                  if (diet_model==2){
+                    nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+                  } else {
+                    Rf_error("diet_model option does not exist, estimation not possible");
+                  }
+                }
               }
               //see(nll_ratio_diet);
             }
@@ -1138,8 +1173,15 @@ Type objective_function<Type>::operator() ()
               //see(obs_ratio2);
               //see(pred_ratio2.size());
               if (pred_ratio2.size()!=0 && obs_ratio2.sum()!=0){
-                if (diet_model==1) nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
-                if (diet_model==2) nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+                if (diet_model==1){
+                  nll_ratio_diet -= ddeltadir(obs_ratio2,pred_ratio2,par_ratio,1);
+                } else {
+                  if (diet_model==2){
+                    nll_ratio_diet -= ddirichlet(obs_ratio2,pred_ratio2,exp(par_ratio(0)),1);
+                  } else {
+                    Rf_error("diet_model option does not exist, estimation not possible");
+                  }
+                }
               }
               //see(nll_ratio_diet);
             }
