@@ -1,3 +1,18 @@
+######################################################################################################################################
+##                                                                                                                                  ##
+##                                  Multispecies state-space assessment model                                                       ##
+##                                                                                                                                  ##
+##      Trijoulet V., Fay G. and Miller T.J. (2019). Performance of a state-space multispecies model:                               ## 
+##      what are the consequences of ignoring predation and process errors in stock assessments?                                    ##
+##      Journal of Applied Ecology. https://doi.org/10.1111/1365-2664.13515                                                         ##
+##                                                                                                                                  ##
+##      Trijoulet, V., Fay, G., Curti, K., Smith, B., & Miller, T. J. (2019). Performance of multispecies population models:        ##
+##      insights on the influence of diet data. ICES Journal of Marine Science. https://doi.org/10.1093/icesjms/fsz053              ##
+##                                                                                                                                  ##
+######################################################################################################################################
+
+
+
 library ("TMB")
 
 #gdbsource("MS_SSM.R",TRUE) # debugger
@@ -73,7 +88,7 @@ data$biomass_other_option <- 1 # Option model biomass_other, 1=cst, 2=surplus pr
 
 #### For trophic interactions
 if (data$predation_on==1){
-  #diet_data<-extract_diet_data_fn("data/NOAA/diet_GB_All_10sp_with_empty.csv")
+  #diet_data<-extract_diet_data_fn("data/diet/diet_stomach_GB_with_empty.csv")
   diet_data<-fake_diet_fn()
   data$age_pred <- diet_data$age_pred
   data$prob_l_given_b <- diet_data$prob_l_given_b # (l,Y,max_B,n_pred)
@@ -82,7 +97,7 @@ if (data$predation_on==1){
   data$ratio_diet <- diet_data$ratio_diet # (l,Y,sp,n_pred)
   data$length_pred <- diet_data$length_pred
 
-  cons_data<-cons_data_fn("data/NOAA/diet2.csv")
+  cons_data<-cons_data_fn("data/diet/diet_consrate_NEUS.csv")
   spring<-cons_data[[1]] # spring survey meansw and bottemp (Y_cons,2,n_pred)
   fall<-cons_data[[2]] # fall survey meansw and bottemp (Y_cons,2,n_pred)
   spring.other<-cons_data[[3]] # spring survey meansw for other food and bottemp (Y_cons,2,n_pred)
