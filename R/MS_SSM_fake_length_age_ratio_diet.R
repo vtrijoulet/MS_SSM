@@ -17,7 +17,7 @@ fake_diet_fn <- function() {
   # for silver hake 3:76 from age 1
   
   for (j in 1:data$n_pred){
-    name_matrix<-paste("data/NOAA/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
+    name_matrix<-paste("data/diet/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
     l.a.conv.ageplus<-read.csv(name_matrix,header=FALSE)
     for (t in 1:data$Y){
       for (stom in 1:n_stom[t,j]){
