@@ -185,7 +185,7 @@ read.ssm_dat.fn <- function(datf)
   
   dat$log_scale_gamma_dat<-scan(datf, skip = dat.start[ind <- ind + 1], n = dat$n_pred)
   
-  dat$log_ratio_w_diet<-as.matrix(read.table("data/NOAA/log_ratio_w_diet_cod.txt"))
+  dat$log_ratio_w_diet<-as.matrix(read.table("data/diet/log_ratio_w_diet_cod.txt"))
   dat$n_ratio<-nrow(dat$log_ratio_w_diet)
   
   dat$B_ecosystem<-7340000 #tons
