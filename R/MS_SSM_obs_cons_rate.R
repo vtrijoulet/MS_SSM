@@ -4,7 +4,7 @@ cons_data_fn <- function (data.file.diet2){
   
   data<-read.csv(data.file.diet2)
   
-  # cf.("~/NOAA/Consumption rates/Make meansw and bottemp as data_per prey species.R")
+  # cf.("Consumption rates/Make meansw and bottemp as data_per prey species.R")
   
   
   # Separate other food from consumption for 10 modelled sp
