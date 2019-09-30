@@ -1,3 +1,18 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                                  //
+//                                  Multispecies state-space assessment model                                                       //
+//                                                                                                                                  //
+//      Trijoulet V., Fay G. and Miller T.J. (2019). Performance of a state-space multispecies model:                               // 
+//      what are the consequences of ignoring predation and process errors in stock assessments?                                    //
+//      Journal of Applied Ecology. https://doi.org/10.1111/1365-2664.13515                                                         //
+//                                                                                                                                  //
+//      Trijoulet, V., Fay, G., Curti, K., Smith, B., & Miller, T. J. (2019). Performance of multispecies population models:        //
+//      insights on the influence of diet data. ICES Journal of Marine Science. https://doi.org/10.1093/icesjms/fsz053              //
+//                                                                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 #include <TMB.hpp> 
 #include <iostream> // Header that defines the standard input/output stream objects (cin, cout, etc.)
 #include <cmath> /// for functions such as power pow()  
