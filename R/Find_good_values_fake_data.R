@@ -23,7 +23,7 @@ vuln.other=c(0.001,0.01) # original
 #vuln.other=c(0.001,0.001) # new vuln
 sum.vuln=1/vuln.other-1
 init$vuln_par[]=log(vuln*(1+sum.vuln))
-source('R/Calculate age for given length.R')
+source('R/Calculate_age_for_given_length.R')
 #data$sd_obs_aggr_I[]<-sqrt(log(0.3^2+1))
 
 
