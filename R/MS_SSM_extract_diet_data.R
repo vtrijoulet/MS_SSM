@@ -1,6 +1,6 @@
 extract_diet_data_fn <- function(diet.file){
   
-  # From ~\NOAA\Foodhabitsdata\Brian's data\file:///C:/Users/vanessa.trijoulet/Documents/NOAA/Foodhabitsdata/Brian's data/Create_length_to_age_array.R
+  # From ~\Foodhabitsdata\Brian's data\Create_length_to_age_array.R
   # and extract diet
   
   diet<-read.csv(diet.file,header=T)
@@ -40,7 +40,7 @@ extract_diet_data_fn <- function(diet.file){
     
     diet.sp<-diet[diet$predator==sp_names[j],]
     
-    name_matrix<-paste("data/NOAA/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
+    name_matrix<-paste("data/diet/GB_",sp_common_names[j],"_length_age_matrix_ageplus.csv",sep="")
     l.a.conv.ageplus<-read.csv(name_matrix,header=FALSE)
     
     
