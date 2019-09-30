@@ -1,6 +1,6 @@
 #### Estimate Convertion parameters to convert length to age ####
 
-load("data/NOAA/LENGTH_W_DATA_FROM_SOLE_10SP.RDATA")
+load("data/diet/length_age_conv.RData")
 
 all.sp <- c(73,72,32,74,197,15,23,105,121,106) # SVSPP in order "cod", "silverhake", "herring", "haddock", "goosefish", "spinydogfish","winterskate", "yellowtailflounder", "mackerel","winterflounder"
 sp=all.sp[1:data$n_pred] # only extracted for number of predators
